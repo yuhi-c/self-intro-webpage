@@ -19,6 +19,7 @@ const Password = () => {
       const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ password }),
       });
       const data = await response.json();
@@ -26,7 +27,6 @@ const Password = () => {
       setIsSubmitting(false);
 
       if (data.success) {
-        localStorage.setItem('isAuthenticated', 'true');
         navigate('/');
       } else {
         setError(data.message || 'Incorrect password');

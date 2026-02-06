@@ -30,6 +30,9 @@ Personal self-introduction website.
 
 ### Backend (Render / local)
 - `INTRO_PASSWORD` (required): password used by `/api/login`
+- `FLASK_SECRET_KEY` (required): secret used to sign the session cookie
+- `FRONTEND_ORIGINS` (recommended): comma-separated allowed origins for CORS (e.g. your Netlify URL)
+- `SESSION_COOKIE_SAMESITE` / `SESSION_COOKIE_SECURE` (recommended for Netlify -> Render cookies)
 
 ### Frontend (Netlify / local)
 - `REACT_APP_API_BASE_URL` (optional): backend base URL
@@ -47,7 +50,7 @@ npm start
 ```bash
 cd backend
 pip install -r requirements.txt
-INTRO_PASSWORD='your-password' python password.py
+INTRO_PASSWORD='your-password' FLASK_SECRET_KEY='dev-secret' python password.py
 ```
 
 ## Deployment
@@ -55,8 +58,9 @@ INTRO_PASSWORD='your-password' python password.py
 ### Netlify (Frontend)
 - Build command: `npm run build`
 - Publish directory: `build`
-- (Optional) Environment: `REACT_APP_API_BASE_URL=https://<your-render-service>.onrender.com`
 
 ### Render (Backend)
-- Set environment variable: `INTRO_PASSWORD`
+- Set environment variables: `INTRO_PASSWORD`, `FLASK_SECRET_KEY`
+- Set `FRONTEND_ORIGINS` to your Netlify site URL
+- For cross-site cookies (Netlify -> Render): set `SESSION_COOKIE_SAMESITE=None` and `SESSION_COOKIE_SECURE=true`
 - Start command: `gunicorn password:app`
