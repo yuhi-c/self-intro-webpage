@@ -16,10 +16,10 @@ INTRO_PASSWORD = os.environ.get('INTRO_PASSWORD')
 if not INTRO_PASSWORD:
     raise RuntimeError('INTRO_PASSWORD is not set')
 
-# CORS (for Netlify -> Render). With credentials you cannot use "*".
+# CORS (for Netlify -> Render).
 frontend_origins = [
     origin.strip()
-    for origin in os.environ.get('FRONTEND_ORIGINS', 'http://localhost:3000').split(',')
+    for origin in os.environ.get('FRONTEND_ORIGINS', 'https://yuhi-selfintroduction.netlify.app').split(',')
     if origin.strip()
 ]
 CORS(
@@ -28,7 +28,6 @@ CORS(
     supports_credentials=True,
 )
 
-# Cookie settings: for cross-site (Netlify -> Render) you typically need SameSite=None + Secure.
 cookie_samesite = os.environ.get('SESSION_COOKIE_SAMESITE')
 cookie_secure = os.environ.get('SESSION_COOKIE_SECURE')
 if cookie_samesite:
