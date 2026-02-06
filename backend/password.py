@@ -70,25 +70,33 @@ if app.config.get('SESSION_COOKIE_SAMESITE') == 'None':
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 
-def _is_authenticated() -> bool:
-    if session.get('authenticated') is True:
-        return True
+def _auth_debug_enabled() -> bool:
+    return (os.environ.get('AUTH_DEBUG', '') or '').strip().lower() in ('1', 'true', 'yes', 'y', 'on')
 
-    token: str | None = None
 
+def _extract_token_from_request() -> tuple[str | None, str | None]:
     auth_header = request.headers.get('Authorization') or ''
     if auth_header.startswith('Bearer '):
-        token = auth_header.removeprefix('Bearer ').strip() or None
+        token = auth_header.removeprefix('Bearer ').strip()
+        return (token or None, 'authorization_header')
 
-    if token is None:
-        data = request.get_json(silent=True) or {}
-        maybe_token = data.get('token')
-        if isinstance(maybe_token, str) and maybe_token.strip():
-            token = maybe_token.strip()
+    data = request.get_json(silent=True) or {}
+    maybe_token = data.get('token')
+    if isinstance(maybe_token, str) and maybe_token.strip():
+        return (maybe_token.strip(), 'json_body')
 
-    if not token:
-        return False
+    maybe_token = request.args.get('token')
+    if isinstance(maybe_token, str) and maybe_token.strip():
+        return (maybe_token.strip(), 'query')
 
+    maybe_token = request.form.get('token')
+    if isinstance(maybe_token, str) and maybe_token.strip():
+        return (maybe_token.strip(), 'form')
+
+    return (None, None)
+
+
+def _validate_token(token: str) -> tuple[bool, str | None]:
     try:
         max_age_seconds = int(os.environ.get('AUTH_TOKEN_MAX_AGE_SECONDS', str(60 * 60 * 24 * 7)))
     except ValueError:
@@ -96,10 +104,28 @@ def _is_authenticated() -> bool:
 
     try:
         payload = serializer.loads(token, max_age=max_age_seconds)
-    except (BadSignature, SignatureExpired, ValueError):
-        return False
+    except SignatureExpired:
+        return (False, 'expired')
+    except BadSignature:
+        return (False, 'bad_signature')
+    except ValueError:
+        return (False, 'invalid')
 
-    return isinstance(payload, dict) and payload.get('authenticated') is True
+    if not (isinstance(payload, dict) and payload.get('authenticated') is True):
+        return (False, 'invalid_payload')
+    return (True, None)
+
+
+def _is_authenticated() -> tuple[bool, dict]:
+    if session.get('authenticated') is True:
+        return (True, {'via': 'session_cookie'})
+
+    token, token_source = _extract_token_from_request()
+    if not token:
+        return (False, {'via': None, 'token_source': token_source})
+
+    ok, reason = _validate_token(token)
+    return (ok, {'via': 'token' if ok else None, 'token_source': token_source, 'token_error': reason})
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -117,7 +143,11 @@ def login():
 
 @app.route('/api/auth', methods=['GET', 'POST'])
 def auth_status():
-    return jsonify({'authenticated': _is_authenticated()}), 200
+    authenticated, details = _is_authenticated()
+    response = {'authenticated': authenticated}
+    if _auth_debug_enabled():
+        response['debug'] = details
+    return jsonify(response), 200
 
 
 @app.route('/api/logout', methods=['POST'])
