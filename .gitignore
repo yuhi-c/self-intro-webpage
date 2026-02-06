@@ -9,6 +9,10 @@ coverage/
 **/.env
 **/.env.*
 
+# Python virtualenv
+.venv/
+venv/
+
 # Python
 __pycache__/
 *.py[cod]
