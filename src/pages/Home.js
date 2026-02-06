@@ -1,17 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import '../styles/Home.css';
 
 const Home = () => {
   return (
     <div>
-      <nav>
-        <ul className="nav-head">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/background">Background Info</Link></li>
-          <li><Link to="/projects">Projects</Link></li>
-        </ul>
-      </nav>
+      <Navbar />
       <div className="main-content">
         <div id="about-me">
           <h1>About Me</h1>
@@ -41,13 +35,13 @@ const Home = () => {
           <img src="myface1-1.jpg" className="profile-img" alt="My Face" />
           <span>Yuhi Chiba</span>
           <span>Waseda University</span>
-          <span>CS and Computer Engineering major</span>
+          <span>Computer Science and Engineering major</span>
           <span>gmail : yuhi.chiba2027@gmail.com</span>
           <div className="icon">
-            <a href="https://github.com/Yuhi0120">
+            <a href="https://github.com/yuhi-c">
               <img src="github-mark.png" alt="GitHub" />
             </a>
-            <a href="https://www.linkedin.com/in/yuhi-chiba-8ab579346?trk=people-guest_people_search-card">
+            <a href="https://www.linkedin.com/in/yuhi-chiba/">
               <img src="LI-In-Bug.png" alt="LinkedIn" />
             </a>
           </div>

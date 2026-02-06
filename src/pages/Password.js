@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Password.css';
+import { API_BASE_URL } from '../config';
 
 const Password = () => {
   const [password, setPassword] = useState('');
@@ -15,7 +16,7 @@ const Password = () => {
 
     try {
       // Used Render to manage password
-      const response = await fetch('https://self-intro-webpage.onrender.com/api/login', {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),

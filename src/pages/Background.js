@@ -1,35 +1,14 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import Navbar from '../components/Navbar';
+import KVRow from '../components/KVRow';
+import SectionCard from '../components/SectionCard';
 import '../styles/Back-Pro.css';
 
-/* For Navigation */
-const Navbar = () => {
+const Section = ({ title, children }) => {
   return (
-    <nav>
-      <ul className="nav-head">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/background">Background Info</Link></li>
-        <li><Link to="/projects">Projects</Link></li>
-      </ul>
-    </nav>
-  );
-};
-
-/* For toggle */
-const ToggleSection = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <div className="toggle-section">
-      <h2 onClick={handleClick} className={isOpen ? "open" : ""}>
-        {title} {isOpen ? '▲' : '▼'}
-      </h2>
-      {isOpen && <div className="toggle-content">{children}</div>}
-    </div>
+    <SectionCard title={title} variant="background">
+      {children}
+    </SectionCard>
   );
 };
 
@@ -37,57 +16,81 @@ const EducationalBackground = () => {
   return (
     <div>
       <h1>Educational Background</h1>
-      <ToggleSection title="High School">
-        <p><strong>School Name:</strong> Nishi Metropolitan High School (April 2019 - March 2022)</p>
-        <p>
-          <strong>Club Activities:</strong> Soft tennis, Physics, Founder of Pokémon Club (which was broadcast on TV).
-        </p>
-        <p>
-          <strong>Extracurricular Activities:</strong> I was chosen as a member of an exchange program that would visit MIT &amp; Harvard.
+      <Section title="High School">
+        <KVRow label="School Name">
+          Nishi Metropolitan High School (April 2019 - March 2022)
+        </KVRow>
+        <KVRow label="Club">
+          Soft tennis, Physics, Founder of Pokémon Club (which was broadcast on TV).
+        </KVRow>
+        <KVRow label="Extracurricular">
+          I was chosen as a member of an exchange program that would visit MIT &amp; Harvard.
           Although canceled due to COVID‐19, I was trained in presentation, communication, and other skills.
-        </p>
+        </KVRow>
 
-      </ToggleSection>
+      </Section>
 
-      <ToggleSection title="University">
-        <p><strong>School Name:</strong> Waseda University (April 2023 - March 2027) </p>
-        <p><strong>Major:</strong> Computer Science &amp; Engineering</p>
-        <p><strong>GPA: </strong>3.52 / 4.0 (So far)</p>
-        <p>
-          <strong>General Education Courses:</strong> Linear Algebra, Advanced Linear Algebra, Mathematical Analysis, Physics, Chemistory, Engineering Modeling,
-          Probability and Statistics, Vector Analysis
-        </p>
-        <p>
-          <strong>Major Courses:</strong> C, Java, Python, Information Math, Algorithm,  Information Theory, Data Structure, Circuit Theory, Logical Circuit
-        </p>
-        <p><strong>Circle Activity:</strong> Squash, Tennis</p>
+      <Section title="University">
+        <KVRow label="School Name">
+          Waseda University (April 2023 - March 2027)
+        </KVRow>
+        <KVRow label="Major">
+          Computer Science &amp; Engineering
+        </KVRow>
+        <KVRow label="GPA">
+          3.52 / 4.0 (So far)
+        </KVRow>
+        <KVRow label="GE Courses">
+          Linear Algebra, Advanced Linear Algebra, Mathematical Analysis, Physics, Chemistory,
+          Engineering Modeling, Probability and Statistics, Vector Analysis
+        </KVRow>
+        <KVRow label="Major Courses">
+          C, Java, Python, Information Math, Algorithm, Information Theory, Data Structure, Circuit Theory, Logical Circuit, OS, Computer Architecture, Data Base
+        </KVRow>
+        <KVRow label="Circle">
+          Squash, Tennis
+        </KVRow>
 
-      </ToggleSection>
+      </Section>
 
-      <ToggleSection title="Studying Abroad">
-        <p><strong>School Name:</strong> University of Texas at Austin (August 2024 - Current) </p>
-        <p><strong>Major:</strong> Electrical and Computer Engineering</p>
-        <p><strong>Courses:</strong> Computer Archtecture, Software Engineering and Design, Networking, Programming Analysis, Operating System</p>
-      </ToggleSection>
+      <Section title="Studying Abroad">
+        <KVRow label="School Name">
+          University of Texas at Austin (August 2024 - Current)
+        </KVRow>
+        <KVRow label="Major">
+          Electrical and Computer Engineering
+        </KVRow>
+        <KVRow label="GPA">
+          3.44 / 4.0
+        </KVRow>
+        <KVRow label="Courses">
+          Computer Archtecture, Software Engineering and Design, Networking, Programming Analysis, Operating System
+        </KVRow>
+      </Section>
     </div>
   );
 };
 
 const JobBackground = () => {
   return (
-    <div>
+    <div className="job-background">
       <h1>Job Background</h1>
-      <ToggleSection title="Backend Engineer Internship">
-        <p><strong>Place:</strong>Ollo Inc. (June 2025 - Present)</p>
-        <p><strong>Responsibilities:</strong></p>
-        <ul>
-          <li>Collaborated with my mentor and CEO to develop and improve product</li>
-          <li>Designed and implemented RESTful APIs using FastAPI</li>
-          <li>Set up and managed Docker and UV CLI based development environments</li>
-          <li>Integrated AWS services for scalable backend</li>
-        </ul>
-        <p><strong>Skills:</strong> FastAPI, Docker, AWS, UV CLI, Poetry</p>
-      </ToggleSection>
+      <Section title="Backend Engineer Internship">
+        <KVRow label="Place">
+          Ollo Inc. (June 2025 - December 2025)
+        </KVRow>
+        <KVRow label="Responsibilities">
+          <ul>
+            <li>Collaborated with my mentor and CEO to develop and improve product</li>
+            <li>Designed and implemented RESTful APIs using FastAPI</li>
+            <li>Set up and managed Docker and UV CLI based development environments</li>
+            <li>Integrated AWS services for scalable backend</li>
+          </ul>
+        </KVRow>
+        <KVRow label="Skills">
+          FastAPI, Docker, AWS(S3, Lambda, Elemental MediaConvert), UV CLI, Poetry, Playwright, GitHub Actions
+        </KVRow>
+      </Section>
     </div>
   );
 };

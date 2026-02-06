@@ -26,8 +26,88 @@
 
 /* Main container */
 .container {
-    padding: 40px;
-    margin: 40px;
+    padding: 40px 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+
+/* Card-like sections (used by Background + Projects) */
+.toggle-section,
+.toggle-section-pro {
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(15, 23, 42, 0.12);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    backdrop-filter: blur(6px);
+}
+
+/* Label/value rows (for long wrapped text like course lists) */
+.kv-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 200px) 1fr;
+    column-gap: 8px;
+    align-items: start;
+    margin: 10px 0;
+}
+
+.kv-label {
+    color: rgba(15, 23, 42, 0.9);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.kv-label strong {
+    display: block;
+}
+
+.kv-value {
+    color: rgba(15, 23, 42, 0.92);
+    line-height: 1.65;
+    word-break: break-word;
+    min-width: 0;
+}
+
+/* Lists inside kv values: keep alignment (no browser default bullets/indent) */
+.kv-value ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kv-value li {
+    display: grid;
+    grid-template-columns: 12px 1fr;
+    column-gap: 10px;
+    align-items: start;
+    margin: 6px 0;
+}
+
+.kv-value li::before {
+    content: "•";
+    color: rgba(15, 23, 42, 0.55);
+    line-height: 1.5;
+}
+
+
+/* Page headings */
+.container h1 {
+    margin: 28px 0 8px;
+    font-size: 2rem;
+    letter-spacing: 0.2px;
+}
+
+/* Give space between groups */
+.container > div {
+    margin-bottom: 28px;
+}
+
+/* Extra breathing room before the Job Background block */
+.job-background {
+    margin-top: 56px;
 }
 
 
@@ -35,51 +115,60 @@
 /* Toggle sections for Background */
 .toggle-section h2 {
     color: black;
-    cursor: pointer;
+    cursor: default;
     margin: 1rem 0 0.5rem 0;
-    font-size: large;
-    transition: color 0.3s;
-}
-
-
-.toggle-section h2.open {
-    color: rgb(57, 165, 228);
-}
-
-.toggle-section h2:hover {
-    color: rgb(36, 142, 208);
-    ;
+    font-size: 1.25rem;
+    font-weight: 650;
 }
 
 .toggle-content {
-    margin-left: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 10px;
+    margin-left: 0.25rem;
+    margin-bottom: 0.25rem;
     font-size: 1rem;
+    line-height: 1.65;
 }
 
 /* Toggle sections For Projects*/
-.toggle-section-pro h2 {
+.toggle-section-pro h3 {
     color: black;
-    cursor: pointer;
+    cursor: default;
     margin: 1rem 0 0.5rem 0;
-    font-size: xx-large;
-    transition: color 0.3s;
-}
-
-
-.toggle-section-pro h2.open {
-    color: rgb(57, 165, 228);
-    ;
-}
-
-.toggle-section-pro h2:hover {
-    color: rgb(36, 142, 208);
-    ;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .toggle-content-pro {
-    margin-left: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-left: 0.25rem;
+    margin-bottom: 0.25rem;
     font-size: 1rem;
+    line-height: 1.65;
+}
+
+.toggle-section-pro h3 + .toggle-content-pro {
+    margin-top: 10px;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 14px;
+    }
+
+    .toggle-section,
+    .toggle-section-pro {
+        padding: 16px 16px;
+        border-radius: 14px;
+    }
+
+    .toggle-section-pro h2 {
+        font-size: 1.35rem;
+    }
+
+    .kv-row {
+        grid-template-columns: 1fr;
+        row-gap: 4px;
+    }
 }
 

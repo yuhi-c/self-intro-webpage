@@ -1,35 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import Navbar from '../components/Navbar';
+import SectionCard from '../components/SectionCard';
 import '../styles/Back-Pro.css';
 
-/* For Navigation Var */
-const Navbar = () => {
+const ProjectCard = ({ title, children }) => {
   return (
-    <nav>
-      <ul className="nav-head">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/background">Background Info</Link></li>
-        <li><Link to="/projects">Projects</Link></li>
-      </ul>
-    </nav>
-  );
-};
-
-/* For the toggle */
-const ToggleSection = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <div className="toggle-section-pro">
-      <h2 onClick={handleClick} className={isOpen ? "open" : ""}>
-        {title} {isOpen ? '▲' : '▼'}
-      </h2>
-      {isOpen && <div className="toggle-content-pro">{children}</div>}
-    </div>
+    <SectionCard title={title} variant="projects">
+      {children}
+    </SectionCard>
   );
 };
 
@@ -37,12 +15,12 @@ const ToggleSection = ({ title, children }) => {
 const PersonalProject = () => {
   return (
     <div>
-      <ToggleSection title="Personal Projects">
-        <strong>Self-introduction WebPage Development (2025 Mar - 2025 April)</strong>
+      <h1>Personal Projects</h1>
+      <ProjectCard title="Self-introduction WebPage Development (2025 Mar - 2025 April)">
         <p>
           I was working on making this webpage by implementing the skills I learned in the Web App Development class at UT Austin.
         </p>
-      </ToggleSection>
+      </ProjectCard>
     </div>
   );
 };
@@ -51,9 +29,10 @@ const PersonalProject = () => {
 const ResearchProject = () => {
   return (
     <div>
-      <ToggleSection title="Research Project">
+      <h1>Research Project</h1>
+      <ProjectCard>
         <p>Coming soon...</p>
-      </ToggleSection>
+      </ProjectCard>
     </div>
   );
 };
