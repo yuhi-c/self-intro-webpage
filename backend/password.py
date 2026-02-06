@@ -18,8 +18,8 @@ if not INTRO_PASSWORD:
 
 # CORS (for Netlify -> Render).
 frontend_origins = [
-    origin.strip()
-    for origin in os.environ.get('FRONTEND_ORIGINS', 'https://yuhi-selfintroduction.netlify.app').split(',')
+    origin.strip().rstrip('/')
+    for origin in os.environ.get('FRONTEND_ORIGINS', 'http://localhost:3000').split(',')
     if origin.strip()
 ]
 CORS(
@@ -33,7 +33,7 @@ cookie_secure = os.environ.get('SESSION_COOKIE_SECURE')
 if cookie_samesite:
     app.config['SESSION_COOKIE_SAMESITE'] = cookie_samesite
 if cookie_secure is not None:
-    app.config['SESSION_COOKIE_SECURE'] = cookie_secure.lower() in ('1', 'true', 'yes')
+    app.config['SESSION_COOKIE_SECURE'] = cookie_secure.lower() in ('true')
 
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
