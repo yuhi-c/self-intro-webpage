@@ -74,15 +74,26 @@ def _is_authenticated() -> bool:
     if session.get('authenticated') is True:
         return True
 
-    auth_header = request.headers.get('Authorization') or ''
-    if not auth_header.startswith('Bearer '):
-        return False
+    token: str | None = None
 
-    token = auth_header.removeprefix('Bearer ').strip()
+    auth_header = request.headers.get('Authorization') or ''
+    if auth_header.startswith('Bearer '):
+        token = auth_header.removeprefix('Bearer ').strip() or None
+
+    if token is None:
+        data = request.get_json(silent=True) or {}
+        maybe_token = data.get('token')
+        if isinstance(maybe_token, str) and maybe_token.strip():
+            token = maybe_token.strip()
+
     if not token:
         return False
 
-    max_age_seconds = int(os.environ.get('AUTH_TOKEN_MAX_AGE_SECONDS', str(60 * 60 * 24 * 7)))
+    try:
+        max_age_seconds = int(os.environ.get('AUTH_TOKEN_MAX_AGE_SECONDS', str(60 * 60 * 24 * 7)))
+    except ValueError:
+        max_age_seconds = 60 * 60 * 24 * 7
+
     try:
         payload = serializer.loads(token, max_age=max_age_seconds)
     except (BadSignature, SignatureExpired, ValueError):
@@ -104,7 +115,7 @@ def login():
     return jsonify({'success': False, 'message': 'Incorrect password'}), 401
 
 
-@app.route('/api/auth', methods=['GET'])
+@app.route('/api/auth', methods=['GET', 'POST'])
 def auth_status():
     return jsonify({'authenticated': _is_authenticated()}), 200
 
