@@ -3,6 +3,7 @@ from hmac import compare_digest
 
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 app = Flask(__name__)
 
@@ -11,6 +12,7 @@ if not SECRET_KEY:
     raise RuntimeError('FLASK_SECRET_KEY is not set')
 
 app.secret_key = SECRET_KEY
+serializer = URLSafeTimedSerializer(SECRET_KEY, salt='intro-auth')
 
 INTRO_PASSWORD = os.environ.get('INTRO_PASSWORD')
 if not INTRO_PASSWORD:
@@ -67,6 +69,27 @@ if app.config.get('SESSION_COOKIE_SAMESITE') == 'None':
 
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
+
+def _is_authenticated() -> bool:
+    if session.get('authenticated') is True:
+        return True
+
+    auth_header = request.headers.get('Authorization') or ''
+    if not auth_header.startswith('Bearer '):
+        return False
+
+    token = auth_header.removeprefix('Bearer ').strip()
+    if not token:
+        return False
+
+    max_age_seconds = int(os.environ.get('AUTH_TOKEN_MAX_AGE_SECONDS', str(60 * 60 * 24 * 7)))
+    try:
+        payload = serializer.loads(token, max_age=max_age_seconds)
+    except (BadSignature, SignatureExpired, ValueError):
+        return False
+
+    return isinstance(payload, dict) and payload.get('authenticated') is True
+
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json(silent=True) or {}
@@ -76,13 +99,14 @@ def login():
 
     if compare_digest(password, INTRO_PASSWORD):
         session['authenticated'] = True
-        return jsonify({'success': True}), 200
+        token = serializer.dumps({'authenticated': True})
+        return jsonify({'success': True, 'token': token}), 200
     return jsonify({'success': False, 'message': 'Incorrect password'}), 401
 
 
 @app.route('/api/auth', methods=['GET'])
 def auth_status():
-    return jsonify({'authenticated': session.get('authenticated') is True}), 200
+    return jsonify({'authenticated': _is_authenticated()}), 200
 
 
 @app.route('/api/logout', methods=['POST'])
