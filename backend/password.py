@@ -16,10 +16,11 @@ INTRO_PASSWORD = os.environ.get('INTRO_PASSWORD')
 if not INTRO_PASSWORD:
     raise RuntimeError('INTRO_PASSWORD is not set')
 
-# CORS (for Netlify -> Render).
+# CORS (for local + Netlify -> Render). With credentials you cannot use "*".
+_default_frontend_origins = 'http://localhost:3000,https://yuhi-selfintroduction.netlify.app'
 frontend_origins = [
     origin.strip().rstrip('/')
-    for origin in os.environ.get('FRONTEND_ORIGINS', 'http://localhost:3000').split(',')
+    for origin in os.environ.get('FRONTEND_ORIGINS', _default_frontend_origins).split(',')
     if origin.strip()
 ]
 CORS(
@@ -28,12 +29,41 @@ CORS(
     supports_credentials=True,
 )
 
-cookie_samesite = os.environ.get('SESSION_COOKIE_SAMESITE')
-cookie_secure = os.environ.get('SESSION_COOKIE_SECURE')
-if cookie_samesite:
+def _parse_bool(value: str | None) -> bool | None:
+    if value is None:
+        return None
+    normalized = value.strip().lower()
+    if normalized in ('1', 'true', 'yes', 'y', 'on'):
+        return True
+    if normalized in ('0', 'false', 'no', 'n', 'off'):
+        return False
+    return None
+
+
+def _canonical_samesite(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip().lower()
+    if normalized == 'none':
+        return 'None'
+    if normalized == 'lax':
+        return 'Lax'
+    if normalized == 'strict':
+        return 'Strict'
+    value = value.strip()
+    return value or None
+
+
+cookie_samesite = _canonical_samesite(os.environ.get('SESSION_COOKIE_SAMESITE'))
+cookie_secure = _parse_bool(os.environ.get('SESSION_COOKIE_SECURE'))
+if cookie_samesite is not None:
     app.config['SESSION_COOKIE_SAMESITE'] = cookie_samesite
 if cookie_secure is not None:
-    app.config['SESSION_COOKIE_SECURE'] = cookie_secure.lower() in ('true')
+    app.config['SESSION_COOKIE_SECURE'] = cookie_secure
+
+# Browsers require Secure when SameSite=None.
+if app.config.get('SESSION_COOKIE_SAMESITE') == 'None':
+    app.config['SESSION_COOKIE_SECURE'] = True
 
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
