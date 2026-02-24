@@ -38,7 +38,7 @@ const EducationalBackground = () => {
           Computer Science &amp; Engineering
         </KVRow>
         <KVRow label="GPA">
-          3.52 / 4.0 (So far)
+          3.56 / 4.0 (So far)
         </KVRow>
         <KVRow label="GE Courses">
           Linear Algebra, Advanced Linear Algebra, Mathematical Analysis, Physics, Chemistory,
