@@ -91,6 +91,26 @@ const JobBackground = () => {
           FastAPI, Docker, AWS(S3, Lambda, Elemental MediaConvert), UV CLI, Poetry, Playwright, GitHub Actions
         </KVRow>
       </Section>
+
+      <Section title="Software Engineer Intern (Full-time)">
+        <KVRow label="Place">
+          Money Forward, Inc. (March 2026)
+        </KVRow>
+        <KVRow label="Location">
+          Tokyo, Japan
+        </KVRow>
+        <KVRow label="Responsibilities">
+          <ul>
+            <li>Researched white-label product requirements and implemented a UI customization feature</li>
+            <li>Optimized the codebase by removing unused account-related functionality and 16 dead dependencies, reducing build time by 3.8%</li>
+            <li>Added MCP request-source headers for API calls and contributed through PRs and code reviews</li>
+            <li>Collaborated in English throughout the internship</li>
+          </ul>
+        </KVRow>
+         <KVRow label="Skills">
+          Next.js, TypeScript, Storybook
+        </KVRow>
+      </Section>
     </div>
   );
 };
