@@ -12,7 +12,6 @@ const Home = () => {
           <h2>Welcome to my personal webpage!</h2>
           <h2>
             I'm Yuhi Chiba, a passionate student of Computer Science and Computer Engineering at Waseda University in Japan.
-            Currently, I am an exchange student at the University of Texas at Austin.
           </h2>
           <h2>
             I am interested in computer science innovations, especially in the realm of artificial intelligence, and in how these advances can contribute to healthcare improvements.

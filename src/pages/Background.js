@@ -55,7 +55,7 @@ const EducationalBackground = () => {
 
       <Section title="Studying Abroad">
         <KVRow label="School Name">
-          University of Texas at Austin (August 2024 - Current)
+          University of Texas at Austin (August 2024 - May 2025)
         </KVRow>
         <KVRow label="Major">
           Electrical and Computer Engineering
